@@ -7,23 +7,12 @@ import com.rabbitmq.client.ConnectionFactory;
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 
-public class ChannelUtil {
+public class RabbitMqUtil {
 
-    private static Connection connection = null;
-    private static Channel channel = null;
-    public static Channel getChannel() {
-        ConnectionFactory connectionFactory = new ConnectionFactory();
-        connectionFactory.setHost("47.100.45.101");
-        connectionFactory.setPort(5672);
-        connectionFactory.setVirtualHost("/");
 
-        try {
-            connection = connectionFactory.newConnection();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (TimeoutException e) {
-            e.printStackTrace();
-        }
+    public static Channel getChannel(Connection connection) {
+
+        Channel channel=null;
         try {
             channel = connection.createChannel();
         } catch (IOException e) {
@@ -31,7 +20,26 @@ public class ChannelUtil {
         }
         return channel;
     }
-    public static void close(){
+
+    public static Connection getConnection() {
+        ConnectionFactory connectionFactory = new ConnectionFactory();
+        connectionFactory.setHost("47.100.45.101");
+        connectionFactory.setPort(5672);
+        connectionFactory.setVirtualHost("/");
+        connectionFactory.setUsername("admin");
+        connectionFactory.setPassword("admin");
+        Connection connection = null;
+        try {
+           connection=connectionFactory.newConnection();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (TimeoutException e) {
+            e.printStackTrace();
+        }
+        return connection;
+    }
+
+    public static void close(Connection connection, Channel channel) throws Exception{
         if (channel!=null){
             try {
                 channel.close();

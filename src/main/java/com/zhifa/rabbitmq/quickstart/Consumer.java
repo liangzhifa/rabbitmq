@@ -1,15 +1,24 @@
 package com.zhifa.rabbitmq.quickstart;
 
 import com.rabbitmq.client.Channel;
-
-import java.io.IOException;
-import java.util.concurrent.TimeoutException;
+import com.rabbitmq.client.Connection;
+import com.rabbitmq.client.QueueingConsumer;
 
 public class Consumer {
-    public static void main(String[] args) throws IOException, TimeoutException {
-        Channel channel = ChannelUtil.getChannel();
+    public static void main(String[] args) throws Exception {
+        Connection connection = RabbitMqUtil.getConnection();
+        Channel channel = RabbitMqUtil.getChannel(connection);
         //声明队列
-        channel.queueDeclare("que1",true,false,false,null);
+        String queueName="que1";
+        channel.queueDeclare(queueName,true,false,false,null);
+        QueueingConsumer queueingConsumer = new QueueingConsumer(channel);
+        channel.basicConsume(queueName, true, queueingConsumer);
+        while (true){
+            QueueingConsumer.Delivery delivery = queueingConsumer.nextDelivery();
+            byte[] body = delivery.getBody();
+            String msg = new String(body);
+            System.out.println(msg);
+        }
 
     }
 }
