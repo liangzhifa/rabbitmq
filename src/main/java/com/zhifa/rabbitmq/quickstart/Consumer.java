@@ -10,6 +10,7 @@ public class Consumer {
         Channel channel = RabbitMqUtil.getChannel(connection);
         //声明队列
         String queueName="que1";
+        //durable持久化
         channel.queueDeclare(queueName,true,false,false,null);
         //创建消费者
         QueueingConsumer queueingConsumer = new QueueingConsumer(channel);
