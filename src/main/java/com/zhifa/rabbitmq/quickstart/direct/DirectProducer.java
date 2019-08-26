@@ -6,7 +6,6 @@ import com.zhifa.rabbitmq.quickstart.RabbitMqUtil;
 import com.zhifa.rabbitmq.quickstart.entity.User;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.ObjectOutputStream;
 
 public class DirectProducer {
